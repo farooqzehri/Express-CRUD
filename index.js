@@ -2,12 +2,14 @@ import todoRoute from './src/routes/todo.routes.js'
 import connectDB from './src/db/index.js'
 import express from 'express'
 import dotenv from 'dotenv'
-
+import cors from 'cors'
 
 const app = express()
 const port = 3000
 
 app.use(express.json());
+app.use(cors())
+
 dotenv.config();
 app.get('/' , (req , res) => {
     res.send('Hello World')
