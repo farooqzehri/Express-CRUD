@@ -4,7 +4,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 
-// muje kall nAHI AAJJ ISSUE 
+// muje kall nAHI AAJJ ISSUE TEEK KERNA HAI 
 
 const app = express()
 const port = 3000
