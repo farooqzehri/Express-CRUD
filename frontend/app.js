@@ -1,24 +1,15 @@
 
-const api = 'https://express-crud-swart.vercel.app/api/v1/todo'
-async function addTodo() {
-    const title = document.querySelector('#title')
-    const description = document.querySelector('#description')
+const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
 
-
-fetch(api , {
-    method: 'GET',
-    headers: {
-        "Content-type": "application/json"
-    },
-    body: JSON.stringify({
-        title,
-        description
+const getAllTodo = () => {
+    fetch(API)
+    .then(res => res.json())
+    .then(res => {
+        console.log(res.todos);
+        
     })
-})
-
-const data = await response.json()
-console.log(data);
-
 }
+getAllTodo()
+
 
 // all ok error fixed on vercel
