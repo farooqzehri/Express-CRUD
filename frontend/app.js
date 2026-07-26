@@ -1,8 +1,7 @@
 
 const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
 const render = document.querySelector('.render')
-const title = document.querySelector('#title')
-const description = document.querySelector('#description')
+
 
 const getAllTodo = () => {
     fetch(API)
@@ -22,25 +21,33 @@ const getAllTodo = () => {
 }
 getAllTodo()
 
-const addTodo = () => {
-    fetch(API , {
+const addTodo = (event) => {
+
+event.preventDefault()
+
+
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    console.log(title , description);
+    
+    fetch(API, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            title: title,
-            description: description
+            title,
+            description
         })
     })
     .then(res => res.json())
-    .then(res => {
-        console.log(res);
-        
-    }).catch(err => {
-        console.log(error);
-        
+    .then(data => {
+        console.log(data);
     })
+    .catch(error => {
+        console.log(error);
+    });
+
 }
 
 
