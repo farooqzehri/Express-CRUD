@@ -13,6 +13,8 @@ const getAllTodo = () => {
                 render.innerHTML += `<li>
                 <h1>${item.title}</h1>
                 <h2>${item.description}</h2>
+                <button>Edit</button>
+                <button>Delete</button>
                 
                 </li>`
             })
@@ -23,7 +25,6 @@ getAllTodo()
 
 const addTodo = (event) => {
 
-event.preventDefault()
 
 
     const title = document.getElementById("title").value;
@@ -48,6 +49,13 @@ event.preventDefault()
         console.log(error);
     });
 
+}
+
+const editTodo = () => {
+    const title = document.getElementById('title').value
+    const description = document.getElementById('description').value
+
+    
 }
 
 
