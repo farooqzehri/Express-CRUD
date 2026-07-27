@@ -1,11 +1,10 @@
 const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
 const render = document.querySelector('.render')
 
-let editAPI = ''
 
 
 const getAllTodo = (event) => {
-  
+
     fetch(API)
         .then(res => res.json())
         .then(res => {
@@ -32,8 +31,8 @@ const addTodo = (event) => {
 
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
-    console.log(title , description);
-    
+    console.log(title, description);
+
     fetch(API, {
         method: "POST",
         headers: {
@@ -44,13 +43,13 @@ const addTodo = (event) => {
             description
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.log(error);
-    });
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
 
     getAllTodo()
 
@@ -58,7 +57,7 @@ const addTodo = (event) => {
 
 
 const editTodo = (id) => {
-   
+
     const updatedTitle = prompt("enter the update title")
     const updatedDescription = prompt('enter the updated description')
 
@@ -72,33 +71,33 @@ const editTodo = (id) => {
             description: updatedDescription
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        
-    })
-    .catch(err => {
-        console.log(err);
-        
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        .catch(err => {
+            console.log(err);
+
+        })
     getAllTodo()
 
 }
 
 
 const deleteTodo = (id) => {
-    fetch(`${API}/${id}` , {
+    fetch(`${API}/${id}`, {
         method: "DELETE",
-     })
-      .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        
     })
-    .catch(err => {
-        console.log(err);
-        
-    })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+
+        })
+        .catch(err => {
+            console.log(err);
+
+        })
     getAllTodo()
 
 }
