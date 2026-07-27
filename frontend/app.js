@@ -3,7 +3,7 @@ const render = document.querySelector('.render')
 
 
 
-const getAllTodo = (event) => {
+const getAllTodo = () => {
 
     fetch(API)
         .then(res => res.json())
@@ -50,7 +50,8 @@ const addTodo = (event) => {
         .catch(error => {
             console.log(error);
         });
-
+title.value = ''
+description.value = ''
     getAllTodo()
 
 }
@@ -98,7 +99,8 @@ const deleteTodo = (id) => {
             console.log(err);
 
         })
-    getAllTodo()
+        return getAllTodo()
+
 
 }
 
