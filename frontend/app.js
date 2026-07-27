@@ -1,138 +1,118 @@
-const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
-const render = document.querySelector('.render')
-const loading = document.querySelector('#loading')
-
+const API = "https://express-crud-swart.vercel.app/api/v1/todo";
+const render = document.querySelector('.render');
 
 const getAllTodo = () => {
-    render.innerHTML = "<h1>⏳Loading....</h1>"
+    render.innerHTML = `
+      <div class="state-message">
+        <h3>⏳ Loading todos...</h3>
+      </div>`;
 
-   const title = document.getElementById("title")
-   const description = document.getElementById("description")
+    const titleInput = document.getElementById("title");
+    const descriptionInput = document.getElementById("description");
 
-    title.value = '';
-                description.value = '';
+    if (titleInput) titleInput.value = '';
+    if (descriptionInput) descriptionInput.value = '';
 
     fetch(API)
         .then(res => res.json())
         .then(res => {
-             
-            const allItems = res.todos
-            console.log(allItems);
-            render.innerHTML = ''
-              if(allItems.length === 0 ){
-                    render.innerHTML = "<h2>No Todo Found</h2>"
-                    return;
-                }
-            allItems.map((item, index) => {
-                render.innerHTML += `<li>
-                <h1>${item.title}</h1>
-                <h2>${item.description}</h2>
-                <button onclick="editTodo('${item._id}')">Edit</button>
-                <button onclick="deleteTodo('${item._id}')">Delete</button>
-                
-                </li>`
-              
+            const allItems = res.todos || [];
+            
+            if (allItems.length === 0) {
+                render.innerHTML = `
+                  <div class="state-message">
+                    <h3>No tasks yet</h3>
+                    <p>Add a task above to get started!</p>
+                  </div>`;
+                return;
+            }
 
-              
-            })
+            // Build all HTML at once before updating DOM
+            render.innerHTML = allItems.map(item => `
+                <li class="todo-item">
+                    <div class="todo-content">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="todo-actions">
+                        <button class="btn btn-small btn-edit" onclick="editTodo('${item._id}')">Edit</button>
+                        <button class="btn btn-small btn-delete" onclick="deleteTodo('${item._id}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
 
-        }).catch(() => {
-            render.innerHTML = "<h1>Error Occured</h1>"
-        })
-}
-getAllTodo()
-
-const addTodo = (event) => {
-
-   const title = document.getElementById("title").value;
-   const description = document.getElementById("description").value;
-
-
-    console.log(title, description);
-
-    if(!title || !description){
-        alert("please fill the All Inputs")
-        return;
-    }else{
-        fetch(API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title,
-            description
-        })
-        
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-
- getAllTodo()
- 
-
-        })
-        .catch(error => {
-            console.log(error);
+        }).catch(error => {
+            console.error(error);
+            render.innerHTML = `
+              <div class="state-message">
+                <h3 style="color: var(--danger)">Error loading tasks</h3>
+                <p>Please try again later.</p>
+              </div>`;
         });
+}
 
+const addTodo = () => {
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
 
+    if (!title || !description) {
+        alert("Please fill in both the title and description.");
+        return;
     }
 
+    fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, description })
+    })
+    .then(res => res.json())
+    .then(() => {
+        getAllTodo();
+    })
+    .catch(error => {
+        console.error(error);
+        alert("Failed to add task.");
+    });
 }
 
-
 const editTodo = (id) => {
+    const updatedTitle = prompt("Enter updated title:");
+    if (updatedTitle === null) return; // User cancelled prompt
 
-    const updatedTitle = prompt("enter the update title")
-    const updatedDescription = prompt('enter the updated description')
+    const updatedDescription = prompt("Enter updated description:");
+    if (updatedDescription === null) return;
 
     fetch(`${API}/${id}`, {
-       
         method: "PUT",
-        headers: {
-            "Content-type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             title: updatedTitle,
             description: updatedDescription
         })
     })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-             getAllTodo()
-
-        })
-        .catch(err => {
-            console.log(err);
-
-        })
-   
-
+    .then(res => res.json())
+    .then(() => {
+        getAllTodo();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Failed to update task.");
+    });
 }
-
 
 const deleteTodo = (id) => {
-if(confirm("are You Sure")){
-        fetch(`${API}/${id}`, {
-        method: "DELETE",
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
-            getAllTodo()
-
-        })
-        .catch(err => {
-            console.log(err);
-
-        })
-       
+    if (confirm("Are you sure you want to delete this task?")) {
+        fetch(`${API}/${id}`, { method: "DELETE" })
+            .then(res => res.json())
+            .then(() => {
+                getAllTodo();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Failed to delete task.");
+            });
+    }
 }
 
-}
-
-
-// all ok error fixed on vercel
+// Initial Fetch
+getAllTodo();
