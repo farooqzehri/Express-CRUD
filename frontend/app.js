@@ -1,7 +1,7 @@
 const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
 const render = document.querySelector('.render')
 
-const editAPI = ''
+let editAPI = ''
 
 
 const getAllTodo = () => {
@@ -15,7 +15,7 @@ const getAllTodo = () => {
                 render.innerHTML += `<li>
                 <h1>${item.title}</h1>
                 <h2>${item.description}</h2>
-                <button onclick="editTodo('${item._id}' , '${item.title})">Edit</button>
+                <button onclick="editTodo('${item._id}')">Edit</button>
                 <button>Delete</button>
                 
                 </li>`
@@ -50,12 +50,13 @@ const addTodo = (event) => {
     .catch(error => {
         console.log(error);
     });
-
 }
 
+
 const editTodo = (id) => {
-    const title = document.getElementById('title').value
-    const description = document.getElementById('description').value
+   
+    const updatedTitle = prompt("enter the update title")
+    const updatedDescription = prompt('enter the updated description')
 
     fetch(`${API}/${id}`, {
         method: "PUT",
@@ -63,8 +64,8 @@ const editTodo = (id) => {
             "Content-type": "application/json"
         },
         body: JSON.stringify({
-            title ,
-            description
+            title: updatedTitle,
+            description: updatedDescription
         })
     })
     .then(res => res.json())
