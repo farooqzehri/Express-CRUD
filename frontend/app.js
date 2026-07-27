@@ -4,7 +4,8 @@ const render = document.querySelector('.render')
 let editAPI = ''
 
 
-const getAllTodo = () => {
+const getAllTodo = (event) => {
+  
     fetch(API)
         .then(res => res.json())
         .then(res => {
@@ -16,7 +17,7 @@ const getAllTodo = () => {
                 <h1>${item.title}</h1>
                 <h2>${item.description}</h2>
                 <button onclick="editTodo('${item._id}')">Edit</button>
-                <button>Delete</button>
+                <button onclick="deleteTodo('${item._id}')">Delete</button>
                 
                 </li>`
             })
@@ -50,6 +51,9 @@ const addTodo = (event) => {
     .catch(error => {
         console.log(error);
     });
+
+    getAllTodo()
+
 }
 
 
@@ -77,6 +81,25 @@ const editTodo = (id) => {
         console.log(err);
         
     })
+    getAllTodo()
+
+}
+
+
+const deleteTodo = (id) => {
+    fetch(`${API}/${id}` , {
+        method: "DELETE",
+     })
+      .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        
+    })
+    .catch(err => {
+        console.log(err);
+        
+    })
+    getAllTodo()
 
 }
 
