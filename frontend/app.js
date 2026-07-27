@@ -4,6 +4,7 @@ const loading = document.querySelector('#loading')
 
 
 const getAllTodo = () => {
+    render.innerHTML = "<h1>⏳Loading....</h1>"
 
    const title = document.getElementById("title")
    const description = document.getElementById("description")
@@ -18,6 +19,10 @@ const getAllTodo = () => {
             const allItems = res.todos
             console.log(allItems);
             render.innerHTML = ''
+              if(allItems.length === 0 ){
+                    render.innerHTML = "<h2>No Todo Found</h2>"
+                    return;
+                }
             allItems.map((item, index) => {
                 render.innerHTML += `<li>
                 <h1>${item.title}</h1>
@@ -26,10 +31,13 @@ const getAllTodo = () => {
                 <button onclick="deleteTodo('${item._id}')">Delete</button>
                 
                 </li>`
+              
 
               
             })
 
+        }).catch(() => {
+            render.innerHTML = "<h1>Error Occured</h1>"
         })
 }
 getAllTodo()
@@ -42,7 +50,11 @@ const addTodo = (event) => {
 
     console.log(title, description);
 
-    fetch(API, {
+    if(!title || !description){
+        alert("please fill the All Inputs")
+        return;
+    }else{
+        fetch(API, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -66,6 +78,7 @@ const addTodo = (event) => {
         });
 
 
+    }
 
 }
 
@@ -102,7 +115,8 @@ const editTodo = (id) => {
 
 
 const deleteTodo = (id) => {
-    fetch(`${API}/${id}`, {
+if(confirm("are You Sure")){
+        fetch(`${API}/${id}`, {
         method: "DELETE",
     })
         .then(res => res.json())
@@ -116,6 +130,7 @@ const deleteTodo = (id) => {
 
         })
        
+}
 
 }
 
