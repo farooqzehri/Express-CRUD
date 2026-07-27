@@ -1,13 +1,20 @@
 const API = 'https://express-crud-swart.vercel.app/api/v1/todo';
 const render = document.querySelector('.render')
-
+const loading = document.querySelector('#loading')
 
 
 const getAllTodo = () => {
 
+   const title = document.getElementById("title")
+   const description = document.getElementById("description")
+
+    title.value = '';
+                description.value = '';
+
     fetch(API)
         .then(res => res.json())
         .then(res => {
+             
             const allItems = res.todos
             console.log(allItems);
             render.innerHTML = ''
@@ -19,6 +26,8 @@ const getAllTodo = () => {
                 <button onclick="deleteTodo('${item._id}')">Delete</button>
                 
                 </li>`
+
+              
             })
 
         })
@@ -27,10 +36,10 @@ getAllTodo()
 
 const addTodo = (event) => {
 
+   const title = document.getElementById("title").value;
+   const description = document.getElementById("description").value;
 
 
-    const title = document.getElementById("title").value;
-    const description = document.getElementById("description").value;
     console.log(title, description);
 
     fetch(API, {
@@ -42,17 +51,21 @@ const addTodo = (event) => {
             title,
             description
         })
+        
     })
         .then(res => res.json())
         .then(data => {
             console.log(data);
+
+ getAllTodo()
+ 
+
         })
         .catch(error => {
             console.log(error);
         });
-title.value = ''
-description.value = ''
-    getAllTodo()
+
+
 
 }
 
@@ -63,6 +76,7 @@ const editTodo = (id) => {
     const updatedDescription = prompt('enter the updated description')
 
     fetch(`${API}/${id}`, {
+       
         method: "PUT",
         headers: {
             "Content-type": "application/json"
@@ -75,13 +89,14 @@ const editTodo = (id) => {
         .then(res => res.json())
         .then(data => {
             console.log(data);
+             getAllTodo()
 
         })
         .catch(err => {
             console.log(err);
 
         })
-    getAllTodo()
+   
 
 }
 
@@ -93,14 +108,14 @@ const deleteTodo = (id) => {
         .then(res => res.json())
         .then(data => {
             console.log(data);
+            getAllTodo()
 
         })
         .catch(err => {
             console.log(err);
 
         })
-        return getAllTodo()
-
+       
 
 }
 
